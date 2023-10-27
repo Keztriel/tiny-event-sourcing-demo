@@ -13,6 +13,7 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
 
     lateinit var projectTitle: String
     lateinit var creatorId: String
+    lateinit var editorId: String
     var tasks = mutableMapOf<UUID, TaskEntity>()
     var projectTags = mutableMapOf<UUID, TagEntity>()
 
@@ -28,6 +29,13 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
     }
 
     @StateTransitionFunc
+    fun projectRenamedApply(event: ProjectRenamedEvent) {
+        projectTitle = event.title
+        editorId = event.editorId
+        updatedAt = event.createdAt
+    }
+
+    @StateTransitionFunc
     fun tagCreatedApply(event: TagCreatedEvent) {
         projectTags[event.tagId] = TagEntity(event.tagId, event.tagName)
         updatedAt = createdAt
@@ -37,6 +45,18 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
     fun taskCreatedApply(event: TaskCreatedEvent) {
         tasks[event.taskId] = TaskEntity(event.taskId, event.taskName, mutableSetOf())
         updatedAt = createdAt
+    }
+
+    @StateTransitionFunc
+    fun taskRenamedApply(event: TaskRenamedEvent) {
+        val tags = tasks[event.taskId]?.tagsAssigned ?: mutableSetOf()
+        tasks[event.taskId] = TaskEntity(event.taskId, event.taskName, tags)
+        updatedAt = createdAt
+    }
+
+    @StateTransitionFunc
+    fun taskDeletedApply(event: TaskDeletedEvent) {
+        tasks.remove(event.taskId)
     }
 }
 
