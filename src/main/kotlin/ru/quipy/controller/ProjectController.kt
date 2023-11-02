@@ -26,8 +26,10 @@ class ProjectController(
         return projectEsService.create { it.create(UUID.randomUUID(), projectTitle, creatorId) }
     }
 
+//    @PostMapping()
+
     @GetMapping("/{projectId}")
-    fun getAccount(@PathVariable projectId: UUID) : ProjectAggregateState? {
+    fun getProject(@PathVariable projectId: UUID) : ProjectAggregateState? {
         return projectEsService.getState(projectId)
     }
 
@@ -37,4 +39,6 @@ class ProjectController(
             it.addTask(taskName)
         }
     }
+
+
 }

@@ -38,32 +38,48 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
     @StateTransitionFunc
     fun tagCreatedApply(event: TagCreatedEvent) {
         projectTags[event.tagId] = TagEntity(event.tagId, event.tagName)
-        updatedAt = createdAt
+        updatedAt = event.createdAt
     }
 
     @StateTransitionFunc
     fun taskCreatedApply(event: TaskCreatedEvent) {
-        tasks[event.taskId] = TaskEntity(event.taskId, event.taskName, mutableSetOf())
-        updatedAt = createdAt
+        tasks[event.taskId] = TaskEntity(event.taskId, event.taskName, mutableSetOf(), mutableSetOf())
+        updatedAt = event.createdAt
     }
 
     @StateTransitionFunc
     fun taskRenamedApply(event: TaskRenamedEvent) {
         val tags = tasks[event.taskId]?.tagsAssigned ?: mutableSetOf()
-        tasks[event.taskId] = TaskEntity(event.taskId, event.taskName, tags)
-        updatedAt = createdAt
+        val executors = tasks[event.taskId]?.executors ?: mutableSetOf()
+        tasks[event.taskId] = TaskEntity(event.taskId, event.taskName, tags, executors)
+        updatedAt = event.createdAt
     }
 
     @StateTransitionFunc
     fun taskDeletedApply(event: TaskDeletedEvent) {
         tasks.remove(event.taskId)
     }
+
+    @StateTransitionFunc
+    fun taskAssignedApply(event: TaskAssignedEvent) {
+        tasks[event.taskId]?.executors?.add(event.executorId)
+            ?: throw IllegalArgumentException("No such task: ${event.taskId}")
+        updatedAt = event.createdAt
+    }
+
+    @StateTransitionFunc
+    fun taskUnassignedApply(event: TaskUnassignedEvent) {
+        tasks[event.taskId]?.executors?.remove(event.executorId)
+            ?: throw IllegalArgumentException("No such task: ${event.taskId}")
+        updatedAt = event.createdAt
+    }
 }
 
 data class TaskEntity(
     val id: UUID = UUID.randomUUID(),
     val name: String,
-    val tagsAssigned: MutableSet<UUID>
+    val tagsAssigned: MutableSet<UUID>,
+    val executors: MutableSet<UUID>
 )
 
 data class TagEntity(

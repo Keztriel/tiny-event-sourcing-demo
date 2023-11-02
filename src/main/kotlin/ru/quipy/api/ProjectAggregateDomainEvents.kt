@@ -92,3 +92,25 @@ class TaskRenamedEvent(
     name = TASK_RENAMED_EVENT,
     createdAt = createdAt
 )
+
+@DomainEvent(name = TASK_ASSIGNED_EVENT)
+class TaskAssignedEvent(
+    val projectId: UUID,
+    val taskId: UUID,
+    val executorId: UUID,
+    createdAt: Long = System.currentTimeMillis(),
+) : Event<ProjectAggregate>(
+    name = TASK_ASSIGNED_EVENT,
+    createdAt = createdAt
+)
+
+@DomainEvent(name = TASK_UNASSIGNED_EVENT)
+class TaskUnassignedEvent(
+    val projectId: UUID,
+    val taskId: UUID,
+    val executorId: UUID,
+    createdAt: Long = System.currentTimeMillis(),
+) : Event<ProjectAggregate>(
+    name = TASK_UNASSIGNED_EVENT,
+    createdAt = createdAt
+)
