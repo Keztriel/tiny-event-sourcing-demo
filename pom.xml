@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<kotlin.version>1.6.21</kotlin.version>
-		<tiny.es.version>2.1.1</tiny.es.version>
+		<tiny.es.version>2.3.0</tiny.es.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -57,7 +57,14 @@
 			<artifactId>tiny-mongo-event-store-spring-boot-starter</artifactId>
 			<version>${tiny.es.version}</version>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>ru.quipy</groupId>
+			<artifactId>tiny-event-sourcing-lib</artifactId>
+			<version>${tiny.es.version}</version>
+		</dependency>
+
+
+    </dependencies>
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
@@ -66,10 +73,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${project.parent.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>${kotlin.version}</version>
 				<configuration>
 					<args>
 						<arg>-Xjsr305=strict</arg>

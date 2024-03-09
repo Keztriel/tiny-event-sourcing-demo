@@ -1,35 +1,38 @@
-package ru.quipy.controller
+package ru.quipy.taskmanager.controller
 
 import org.springframework.web.bind.annotation.*
-import ru.quipy.api.*
+import ru.quipy.taskmanager.api.*
+import ru.quipy.taskmanager.logic.*
 import ru.quipy.core.EventSourcingService
-import ru.quipy.logic.*
+import ru.quipy.taskmanager.projections.Project
+import ru.quipy.taskmanager.projections.ProjectCacheRepository
 import java.util.*
 
 @RestController
 @RequestMapping("/projects")
 class ProjectController(
-    val projectEsService: EventSourcingService<UUID, ProjectAggregate, ProjectAggregateState>
+    val projectEsService: EventSourcingService<UUID, ProjectAggregate, ProjectAggregateState>,
+    val projectCacheRepository: ProjectCacheRepository,
 ) {
 
-//    @GetMapping()
-//    fun getAllProjects() : List<ProjectAggregateState>{
-////        return projectEsService
-//    }
+    @GetMapping()
+    fun getAllProjects(): MutableList<Project> {
+        return projectCacheRepository?.findAll()
+    }
 
     @PostMapping("/{projectTitle}")
     fun createProject(@PathVariable projectTitle: String, @RequestParam creatorId: String) : ProjectCreatedEvent {
         return projectEsService.create { it.create(UUID.randomUUID(), projectTitle, creatorId) }
     }
 
-    @PatchMapping("/{projectId}/rename")
+    @PostMapping("/{projectId}/rename")
     fun renameProject(@PathVariable projectId: UUID, @RequestParam name: String, @RequestParam editorId: String): ProjectRenamedEvent {
         return projectEsService.update(projectId) { it.rename(name, editorId) }
     }
 
     @GetMapping("/{projectId}")
-    fun getProject(@PathVariable projectId: UUID) : ProjectAggregateState? {
-        return projectEsService.getState(projectId)
+    fun getProject(@PathVariable projectId: String) : ProjectAggregateState? {
+        return projectEsService.getState(UUID.fromString(projectId))
     }
 
     @PostMapping("/{projectId}/tasks/{taskName}")
@@ -67,5 +70,10 @@ class ProjectController(
         return projectEsService.update(projectId) {
             it.assignTagToTask(tagId, taskId)
         }
+    }
+
+    @PostMapping("/{userId}/invite/{projectId}")
+    fun createUser(@PathVariable userId: UUID, @PathVariable projectId: UUID): UserInvitedEvent {
+        return projectEsService.update(projectId) { it.invite(userId) }
     }
 }

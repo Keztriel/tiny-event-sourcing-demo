@@ -1,6 +1,6 @@
-package ru.quipy.logic
+package ru.quipy.taskmanager.logic
 
-import ru.quipy.api.*
+import ru.quipy.taskmanager.api.*
 import ru.quipy.core.annotations.StateTransitionFunc
 import ru.quipy.domain.AggregateState
 import java.util.*
@@ -14,6 +14,7 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
     lateinit var projectTitle: String
     lateinit var creatorId: String
     lateinit var editorId: String
+    var users = mutableSetOf<UUID>()
     var tasks = mutableMapOf<UUID, TaskEntity>()
     var projectTags = mutableMapOf<UUID, TagEntity>()
 
@@ -25,6 +26,7 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
         projectId = event.projectId
         projectTitle = event.title
         creatorId = event.creatorId
+        editorId = event.creatorId
         updatedAt = createdAt
     }
 
@@ -72,6 +74,12 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
         tasks[event.taskId]?.executors?.remove(event.executorId)
             ?: throw IllegalArgumentException("No such task: ${event.taskId}")
         updatedAt = event.createdAt
+    }
+
+    @StateTransitionFunc
+    fun userInvitedToProjectApply(event: UserInvitedEvent) {
+        users.add(event.userId)
+        updatedAt = createdAt
     }
 }
 

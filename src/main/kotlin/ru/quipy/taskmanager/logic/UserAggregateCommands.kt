@@ -1,6 +1,6 @@
-package ru.quipy.logic
+package ru.quipy.taskmanager.logic
 
-import ru.quipy.api.*
+import ru.quipy.taskmanager.api.UserCreatedEvent
 import java.util.*
 
 
@@ -16,9 +16,9 @@ fun UserAggregateState.create(id: UUID, nickname: String, username: String, pass
     )
 }
 
-fun UserAggregateState.invite(projectId: UUID): UserInvitedEvent {
-    return UserInvitedEvent(
-            userId = this.getId(),
-            projectId = projectId,
-    )
-}
+//fun UserAggregateState.invite(projectId: UUID): UserInvitedEvent {
+//    return UserInvitedEvent(
+//            userId = this.getId(),
+//            projectId = projectId,
+//    )
+//}

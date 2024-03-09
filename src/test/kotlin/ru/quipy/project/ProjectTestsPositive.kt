@@ -11,11 +11,14 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import ru.quipy.DemoApplication
-import ru.quipy.api.*
+import ru.quipy.taskmanager.api.ProjectAggregate
+import ru.quipy.taskmanager.api.TagCreatedEvent
+import ru.quipy.taskmanager.api.TaskCreatedEvent
+import ru.quipy.taskmanager.api.UserAggregate
+import ru.quipy.taskmanager.logic.*
+//import ru.quipy.api.*
 import ru.quipy.core.EventSourcingService
-import ru.quipy.logic.*
-import java.net.URI
+//import ru.quipy.logic.*
 import java.util.UUID
 
 @SpringBootTest
@@ -112,15 +115,13 @@ class ProjectTestsPositive {
         projectEsService.create { it.create(testId, "Toast", "Testo") }
         userEsService.create { it.create(userId, "Biba", "boba", "dva") }
 
-        userEsService.update(userId) { it.invite(testId) }
-
-        val user = userEsService.getState(userId)
-        Assertions.assertTrue(true == user?.projects?.contains(testId))
+        projectEsService.update(testId) { it.invite(userId) }
 
         val taskCreated = projectEsService.update(testId) { it.addTask("Bread") }
         projectEsService.update(testId) { it.assignTaskToExecutor(taskCreated.taskId, userId)}
 
         val project = projectEsService.getState(testId)
+        Assertions.assertTrue(true == project?.users?.contains(userId))
         Assertions.assertTrue(true == project?.tasks?.get(taskCreated.taskId)?.executors?.contains(userId))
     }
 }

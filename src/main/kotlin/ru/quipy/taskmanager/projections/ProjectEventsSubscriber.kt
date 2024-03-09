@@ -1,13 +1,13 @@
-package ru.quipy.projections
+package ru.quipy.taskmanager.projections
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import ru.quipy.api.ProjectAggregate
-import ru.quipy.api.TagAssignedToTaskEvent
-import ru.quipy.api.TagCreatedEvent
-import ru.quipy.api.TaskCreatedEvent
+import ru.quipy.taskmanager.api.ProjectAggregate
+import ru.quipy.taskmanager.api.TagAssignedToTaskEvent
+import ru.quipy.taskmanager.api.TagCreatedEvent
+import ru.quipy.taskmanager.api.TaskCreatedEvent
 import ru.quipy.streams.AggregateSubscriptionsManager
 import javax.annotation.PostConstruct
 

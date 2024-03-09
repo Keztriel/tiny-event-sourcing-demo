@@ -1,10 +1,10 @@
-package ru.quipy.logic
+package ru.quipy.taskmanager.logic
 
-import ru.quipy.api.*
+import ru.quipy.taskmanager.api.UserAggregate
+import ru.quipy.taskmanager.api.UserCreatedEvent
 import ru.quipy.core.annotations.StateTransitionFunc
 import ru.quipy.domain.AggregateState
 import java.util.*
-import javax.annotation.meta.TypeQualifierNickname
 
 class UserAggregateState : AggregateState<UUID, UserAggregate> {
     private lateinit var userId: UUID
@@ -14,7 +14,7 @@ class UserAggregateState : AggregateState<UUID, UserAggregate> {
     lateinit var nickname: String
     lateinit var username: String
     lateinit var password: String
-    var projects = mutableSetOf<UUID>()
+//    var projects = mutableSetOf<UUID>()
 
     override fun getId() = userId
 
@@ -23,12 +23,13 @@ class UserAggregateState : AggregateState<UUID, UserAggregate> {
         userId = event.userId
         nickname= event.nickname
         username = event.userName
+        password = event.password
         updatedAt = createdAt
     }
 
-    @StateTransitionFunc
-    fun userInvitedToProjectApply(event: UserInvitedEvent) {
-        projects.add(event.projectId)
-        updatedAt = createdAt
-    }
+//    @StateTransitionFunc
+//    fun userInvitedToProjectApply(event: UserInvitedEvent) {
+//        projects.add(event.projectId)
+//        updatedAt = createdAt
+//    }
 }

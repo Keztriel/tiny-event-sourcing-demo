@@ -1,9 +1,8 @@
-package ru.quipy.api
+package ru.quipy.taskmanager.api
 
 import ru.quipy.core.annotations.DomainEvent
 import ru.quipy.domain.Event
 import java.util.*
-import javax.annotation.meta.TypeQualifierNickname
 
 const val USER_CREATED_EVENT = "USER_CREATED_EVENT"
 const val USER_INVITED_EVENT = "USER_INVITED_EVENT"
@@ -21,12 +20,12 @@ class UserCreatedEvent(
         createdAt = createdAt,
 )
 
-@DomainEvent(name = USER_INVITED_EVENT)
-class UserInvitedEvent(
-        val userId: UUID,
-        val projectId: UUID,
-        createdAt: Long = System.currentTimeMillis(),
-) : Event<UserAggregate>(
-        name = USER_INVITED_EVENT,
-        createdAt = createdAt
-)
+//@DomainEvent(name = USER_INVITED_EVENT)
+//class UserInvitedEvent(
+//        val userId: UUID,
+//        val projectId: UUID,
+//        createdAt: Long = System.currentTimeMillis(),
+//) : Event<UserAggregate>(
+//        name = USER_INVITED_EVENT,
+//        createdAt = createdAt
+//)

@@ -1,4 +1,4 @@
-package ru.quipy.api
+package ru.quipy.taskmanager.api
 
 import ru.quipy.core.annotations.DomainEvent
 import ru.quipy.domain.Event
@@ -112,5 +112,15 @@ class TaskUnassignedEvent(
     createdAt: Long = System.currentTimeMillis(),
 ) : Event<ProjectAggregate>(
     name = TASK_UNASSIGNED_EVENT,
+    createdAt = createdAt
+)
+
+@DomainEvent(name = USER_INVITED_EVENT)
+class UserInvitedEvent(
+    val userId: UUID,
+    val projectId: UUID,
+    createdAt: Long = System.currentTimeMillis(),
+) : Event<ProjectAggregate>(
+    name = USER_INVITED_EVENT,
     createdAt = createdAt
 )

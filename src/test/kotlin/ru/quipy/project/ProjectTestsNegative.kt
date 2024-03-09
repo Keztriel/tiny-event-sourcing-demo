@@ -10,13 +10,11 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
-import ru.quipy.api.ProjectAggregate
-import ru.quipy.api.UserAggregate
+import ru.quipy.taskmanager.api.ProjectAggregate
+import ru.quipy.taskmanager.api.UserAggregate
 import ru.quipy.core.EventSourcingService
-import ru.quipy.logic.ProjectAggregateState
-import ru.quipy.logic.UserAggregateState
-import ru.quipy.logic.create
-import ru.quipy.logic.invite
+import ru.quipy.taskmanager.logic.ProjectAggregateState
+import ru.quipy.taskmanager.logic.UserAggregateState
 import java.util.*
 
 @SpringBootTest
@@ -52,15 +50,6 @@ class ProjectTestsNegative {
     fun `getNonexistentProject`() {
         val project = projectEsService.getState(testId)
         Assertions.assertEquals(project, null)
-    }
-
-    @Test
-    fun `inviteUserToNonexistentProject`() {
-        userEsService.create { it.create(userId, "Test", "test", "test") }
-        userEsService.update(userId) { it.invite(testId) }
-
-        Assertions.assertEquals(null, projectEsService.getState(testId))
-        Assertions.assertTrue(true == userEsService.getState(userId)?.projects?.contains(testId))
     }
 
 }

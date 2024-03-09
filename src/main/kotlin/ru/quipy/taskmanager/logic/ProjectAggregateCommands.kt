@@ -1,6 +1,6 @@
-package ru.quipy.logic
+package ru.quipy.taskmanager.logic
 
-import ru.quipy.api.*
+import ru.quipy.taskmanager.api.*
 import java.util.*
 
 
@@ -67,4 +67,11 @@ fun ProjectAggregateState.assignTagToTask(tagId: UUID, taskId: UUID): TagAssigne
     }
 
     return TagAssignedToTaskEvent(projectId = this.getId(), tagId = tagId, taskId = taskId)
+}
+
+fun ProjectAggregateState.invite(userId: UUID): UserInvitedEvent {
+    return UserInvitedEvent(
+        userId = userId,
+        projectId = this.getId(),
+    )
 }
